@@ -1,8 +1,8 @@
 # Use an official base image
-FROM ubuntu:latest
+FROM ubuntu:22.04
 
 # Install dependencies
-RUN apt update && apt install -y vim nginx
+RUN apt update && apt install -y nginx
 
 # Expose a port to the host machine
 EXPOSE 8080
