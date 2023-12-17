@@ -14,7 +14,7 @@ spec:
         app: remo
     spec:
       containers:
-      - image: nginx
-        name: nginx
+        - image: itlinux/simple-argo:main
+        name: simple
         ports:
         - containerPort: 80
