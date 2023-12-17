@@ -11,7 +11,7 @@ COPY default.conf /etc/nginx/sites-available/default
 EXPOSE 80/tcp
 
 # Echo custom msg for default html page
-RUN echo "ciao it was built on $(date)" >/usr/share/nginx/html/index.html
+#RUN echo "ciao it was built on $(date)" >/usr/share/nginx/html/index.html
 
 # Run the Nginx server
 CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
