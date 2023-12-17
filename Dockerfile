@@ -1,10 +1,10 @@
 # Use an official base image
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
 # Install dependencies
-RUN apt update && apt install -y vim nginx \
+RUN apt update && apt install -y vim nginx
 
 # Expose a port to the host machine
-EXPOSE 80
+EXPOSE 8080
 RUN echo "ciao it was built on $(date)" >/usr/share/nginx/html/index.html
 
