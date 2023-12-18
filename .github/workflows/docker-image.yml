@@ -23,7 +23,7 @@ jobs:
         # BuildKit (used with `docker buildx`) is the best way to build images
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3.0.0
+        uses: docker/setup-buildx-action@v3
 
 
       - name: Log in to Docker Hub
@@ -59,8 +59,8 @@ jobs:
         with:
           platforms: linux/amd64, linux/arm64, linux/arm/v7
           builder: ${{ steps.buildx.outputs.name }}
-          cache-from: type=local, src=/tmp/.buildx-cache
-          cache-to: type=local, dest=/tmp/. buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           # I don't push during a pull_request, only build
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
