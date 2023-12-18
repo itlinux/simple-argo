@@ -15,11 +15,16 @@ jobs:
         uses: actions/checkout@v4
       
       
+        # we need qemu and buildx so we can build multiple platforms later
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        id: qemu
+        uses: docker/setup-qemu-action@v3.0.0
+
+        # BuildKit (used with `docker buildx`) is the best way to build images
       - name: Set up Docker Buildx
-        id:  buildx
+        id: buildx
         uses: docker/setup-buildx-action@v3.0.0
+
 
       - name: Cache Docker layers
         uses: actions/cache@v2.1.6
