@@ -66,6 +66,3 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
 
-      - name: Show image digest
-        run: echo ${ff steps.docker_build.outputs.digest }}
-
