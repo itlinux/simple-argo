@@ -14,23 +14,62 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
       
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+      - name: Set up Docker Buildx
+        id:  buildx
+        uses: docker/setup-buildx-action@vl
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2.1.6
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Log in to Docker Hub
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+
+      - name: Login to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@vl
         with:
-          images: itlinux/simple-argo
-      
-      - name: Build and push Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: docker_meta
+        uses: docker/metadata-action@v3.3.0
         with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          # list of Docker images to use as base name for tags
+          images: |
+             itlinux/simple-argo
+             ghcr.io/itlinux/simple-argo
+          flavor: |
+            latest=false
+          tags:
+            type=raw,value=latest
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          platforms: linux/amd64, linux/arm64, linux/arm/v7
+          builder: ${{ steps.buildx.outputs.name }}
+          cache-from: type=local, src=/tmp/.buildx-cache
+          cache-to: type=local, dest=/tmp/. buildx-cache
+          # I don't push during a pull_request, only build
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
+
+      - name: Show image digest
+        run: echo ${ff steps.docker_build.outputs.digest }}
+
