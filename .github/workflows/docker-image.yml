@@ -39,7 +39,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ secrets.GIT_USERNAME }}
-          password: ${{ secrets.GIT_TOKEN }}
+          password: ${{ secrets.GH_SIMPLE }}
 
       - name: Docker meta
         id: docker_meta
