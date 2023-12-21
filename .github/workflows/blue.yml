@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker BLUE
 
 on:
   push:
@@ -10,21 +10,10 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - dockerfile: ./blue/Dockerfile
-            image: ghcr.io/itlinux/blue
-          - dockerfile: ./Dockerfile
-            image: ghcr.io/itlinux/argo-simple
-    permissions:
-      contents: read
-      packages: write
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
-         
+
         # we need qemu and buildx so we can build multiple platforms later
       - name: Set up QEMU
         id: qemu
@@ -35,6 +24,11 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Build the Docker image blue
+        working-directory: ./blue
+        # Tag image to be built
+        # Change ${{ github.repository }} variable by another image name if you want but don't forget changing also image-tag below
+        run: docker build . --file Dockerfile --tag ${{ github.repository }}:blue
 
       - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
@@ -68,7 +62,6 @@ jobs:
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           platforms: linux/amd64, linux/arm64, linux/arm/v7
-          file: ${{ matrix.dockerfile }}
           builder: ${{ steps.buildx.outputs.name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
