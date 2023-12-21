@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Build Blue
+        with:
+          file: ./blue/Dockerfile
+          
       - name: Check out the repo
         uses: actions/checkout@v4
          
