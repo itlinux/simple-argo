@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker BLUE
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
         working-directory: ./blue
         # Tag image to be built
         # Change ${{ github.repository }} variable by another image name if you want but don't forget changing also image-tag below
-        run: docker build . --file Dockerfile --tag ${{ github.repository }}:latest
+        run: docker build . --file Dockerfile --tag ${{ github.repository }}:blue
 
       - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
