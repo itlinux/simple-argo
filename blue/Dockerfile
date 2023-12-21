@@ -7,9 +7,9 @@ RUN apt install -y python3  python3-pip vim btop
 
 RUN mkdir -p /blue/templates
 WORKDIR /blue
-COPY ./blue.py /blue
+COPY blue.py /blue/blue.py
 COPY templates/index.html /blue/templates
-COPY ./requirements.txt /blue
+COPY requirements.txt /blue/requirements.txt
 RUN pip install -r requirements.txt
 
 # Run the basic blue server
