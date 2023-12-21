@@ -10,6 +10,17 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./blue/Dockerfile
+            image: ghcr.io/itlinux/blue
+          - dockerfile: ./Dockerfile
+            image: ghcr.io/itlinux/argo-simple
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
