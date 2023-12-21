@@ -12,11 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Build Blue
-        uses: docker/setup-buildx-action@v3
-        with:
-          file: ./blue/Dockerfile
-          
       - name: Check out the repo
         uses: actions/checkout@v4
          
